@@ -45,14 +45,9 @@ namespace Imgur
         readonly string ThumbnailsDir = "imgur/uploads/thumbnails";
         readonly List<string> ImageSizes = new[] { "320x480", "640x960", "640x1136", "768x1024", "1536x2048" }.ToList();
 
-        public IVirtualFileSystem Files
-        {
-            get { return HostContext.VirtualFileSystem; }
-        }
-
         public object Get(Images request)
         {
-            return Files.GetDirectory(UploadsDir).Files.Map(x => x.Name);
+            return VirtualFiles.GetDirectory(UploadsDir).Files.Map(x => x.Name);
         }
 
         public object Post(Upload request)
@@ -90,13 +85,13 @@ namespace Imgur
                 {
                     img.Save(msPng, ImageFormat.Png);
                     msPng.Position = 0;
-                    Files.WriteFile(UploadsDir.CombineWith(fileName), msPng);
+                    VirtualFiles.WriteFile(UploadsDir.CombineWith(fileName), msPng);
                 }
 
                 var stream = Resize(img, ThumbnailSize, ThumbnailSize);
-                Files.WriteFile(ThumbnailsDir.CombineWith(fileName), stream);
+                VirtualFiles.WriteFile(ThumbnailsDir.CombineWith(fileName), stream);
 
-                ImageSizes.ForEach(x => Files.WriteFile(
+                ImageSizes.ForEach(x => VirtualFiles.WriteFile(
                     UploadsDir.CombineWith(x).CombineWith(hash + ".png"),
                     Get(new Resize { Id = hash, Size = x }).ReadFully()));
             }
@@ -105,7 +100,7 @@ namespace Imgur
         [AddHeader(ContentType = "image/png")]
         public Stream Get(Resize request)
         {
-            var imageFile = Files.GetFile(UploadsDir.CombineWith(request.Id + ".png"));
+            var imageFile = VirtualFiles.GetFile(UploadsDir.CombineWith(request.Id + ".png"));
             if (request.Id == null || imageFile == null)
                 throw HttpError.NotFound(request.Id + " was not found");
 
@@ -186,14 +181,14 @@ namespace Imgur
             var file = request.Id + ".png";
             var filesToDelete = new[] { UploadsDir.CombineWith(file), ThumbnailsDir.CombineWith(file) }.ToList();
             ImageSizes.Each(x => filesToDelete.Add(UploadsDir.CombineWith(x, file)));
-            Files.DeleteFiles(filesToDelete);
+            VirtualFiles.DeleteFiles(filesToDelete);
 
             return HttpResult.Redirect("/imgur/");
         }
 
         public object Any(Reset request)
         {
-            Files.DeleteFiles(Files.GetDirectory(UploadsDir).GetAllMatchingFiles("*.png"));
+            VirtualFiles.DeleteFiles(VirtualFiles.GetDirectory(UploadsDir).GetAllMatchingFiles("*.png"));
             File.ReadAllLines("~/imgur/preset-urls.txt".MapHostAbsolutePath()).ToList()
                 .ForEach(url => WriteImage(new MemoryStream(url.Trim().GetBytesFromUrl())));
 

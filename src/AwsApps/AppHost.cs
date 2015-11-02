@@ -22,7 +22,7 @@ namespace AwsApps
 
             //Comment out 2 lines below to change to use local FileSystem instead of S3
             var s3Client = new AmazonS3Client(AwsConfig.AwsAccessKey, AwsConfig.AwsSecretKey, RegionEndpoint.USEast1);
-            VirtualFileSystem = new S3VirtualPathProvider(s3Client, AwsConfig.S3BucketName, this);
+            VirtualFiles = new S3VirtualPathProvider(s3Client, AwsConfig.S3BucketName, this);
 
             container.Register<IPocoDynamo>(c => new PocoDynamo(AwsConfig.CreateAmazonDynamoDb()));
             var db = container.Resolve<IPocoDynamo>();
@@ -35,7 +35,7 @@ namespace AwsApps
         public override List<IVirtualPathProvider> GetVirtualPathProviders()
         {
             var pathProviders = base.GetVirtualPathProviders();
-            pathProviders.Add(VirtualFileSystem);
+            pathProviders.Add(VirtualFiles);
             return pathProviders;
         }
     }

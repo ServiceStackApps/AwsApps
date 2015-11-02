@@ -75,19 +75,14 @@ namespace RestFiles
         static readonly HashSet<string> TextFileExtensions = "txt,sln,proj,cs,config,asax,css,htm,html,xml,js,md".Split(',').ToHashSet();
         static readonly HashSet<string> ExcludeDirectories = "bin,Properties".Split(',').ToHashSet();
 
-        public IVirtualFileSystem Files
-        {
-            get { return HostContext.VirtualFileSystem; }
-        }
-
         public object Get(Files request)
         {
             var targetPath = GetAndValidateExistingPath(request);
 
-            var isDirectory = Files.IsDirectory(targetPath);
+            var isDirectory = VirtualFiles.IsDirectory(targetPath);
 
             if (!isDirectory && request.ForDownload)
-                return new HttpResult(Files.GetFile(targetPath), asAttachment: true);
+                return new HttpResult(VirtualFiles.GetFile(targetPath), asAttachment: true);
 
             var response = isDirectory
                 ? new FilesResponse { Directory = GetFolderResult(targetPath) }
@@ -100,14 +95,14 @@ namespace RestFiles
         {
             var targetDir = GetPath(request);
 
-            if (Files.IsFile(targetDir))
+            if (VirtualFiles.IsFile(targetDir))
                 throw new NotSupportedException(
                 "POST only supports uploading new files. Use PUT to replace contents of an existing file");
 
             foreach (var uploadedFile in base.Request.Files)
             {
                 var newFilePath = targetDir.CombineWith(uploadedFile.FileName);
-                Files.WriteFile(newFilePath, uploadedFile.InputStream);
+                VirtualFiles.WriteFile(newFilePath, uploadedFile.InputStream);
             }
 
             return new FilesResponse();            
@@ -115,7 +110,7 @@ namespace RestFiles
 
         public void Put(Files request)
         {
-            var targetFile = Files.GetFile(GetAndValidateExistingPath(request));
+            var targetFile = VirtualFiles.GetFile(GetAndValidateExistingPath(request));
 
             if (!TextFileExtensions.Contains(targetFile.Extension))
                 throw new NotSupportedException("PUT Can only update text files, not: " + targetFile.Extension);
@@ -123,20 +118,20 @@ namespace RestFiles
             if (request.TextContents == null)
                 throw new ArgumentNullException("TextContents");
 
-            Files.WriteFile(targetFile.VirtualPath, request.TextContents);
+            VirtualFiles.WriteFile(targetFile.VirtualPath, request.TextContents);
         }
 
         public void Delete(Files request)
         {
             var targetFile = GetAndValidateExistingPath(request);
-            Files.DeleteFile(targetFile);
+            VirtualFiles.DeleteFile(targetFile);
         }
 
         private FolderResult GetFolderResult(string targetPath)
         {
             var result = new FolderResult();
 
-            var dir = Files.GetDirectory(targetPath);
+            var dir = VirtualFiles.GetDirectory(targetPath);
             foreach (var subDir in dir.Directories)
             {
                 if (ExcludeDirectories.Contains(subDir.Name)) continue;
@@ -172,7 +167,7 @@ namespace RestFiles
         private string GetAndValidateExistingPath(Files request)
         {
             var targetPath = GetPath(request);
-            if (!Files.IsFile(targetPath) && !Files.IsDirectory(targetPath))
+            if (!VirtualFiles.IsFile(targetPath) && !VirtualFiles.IsDirectory(targetPath))
                 throw new HttpError(HttpStatusCode.NotFound, new FileNotFoundException("Could not find: " + request.Path));
 
             return targetPath;
@@ -180,7 +175,7 @@ namespace RestFiles
 
         private FileResult GetFileResult(string filePath)
         {
-            var file = Files.GetFile(filePath);
+            var file = VirtualFiles.GetFile(filePath);
             var isTextFile = TextFileExtensions.Contains(file.Extension);
 
             return new FileResult
@@ -189,7 +184,7 @@ namespace RestFiles
                 Extension = file.Extension,
                 FileSizeBytes = file.Length,
                 IsTextFile = isTextFile,
-                Contents = isTextFile ? Files.GetFile(file.VirtualPath).ReadAllText() : null,
+                Contents = isTextFile ? VirtualFiles.GetFile(file.VirtualPath).ReadAllText() : null,
                 ModifiedDate = file.LastModified,
             };
         }
