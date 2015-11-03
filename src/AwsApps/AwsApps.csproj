@@ -55,6 +55,10 @@
       <HintPath>..\packages\AWSSDK.S3.3.1.3.4\lib\net45\AWSSDK.S3.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="DotNetOpenAuth, Version=4.3.0.0, Culture=neutral, PublicKeyToken=2780ccd10d57b246, processorArchitecture=MSIL">
+      <HintPath>..\packages\DotNetOpenAuth.Ultimate.4.3.4.13329\lib\net45-full\DotNetOpenAuth.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\src\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
       <Private>True</Private>
@@ -67,6 +71,12 @@
     <Reference Include="ServiceStack, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\ServiceStack.Aws\lib\ServiceStack.dll</HintPath>
+    </Reference>
+    <Reference Include="ServiceStack.Authentication.OAuth2">
+      <HintPath>..\..\..\ServiceStack.Aws\lib\ServiceStack.Authentication.OAuth2.dll</HintPath>
+    </Reference>
+    <Reference Include="ServiceStack.Authentication.OpenId">
+      <HintPath>..\..\..\ServiceStack.Aws\lib\ServiceStack.Authentication.OpenId.dll</HintPath>
     </Reference>
     <Reference Include="ServiceStack.Aws, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -118,7 +128,16 @@
     <Reference Include="System.Configuration" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="awsauth\css\bootstrap-social.css" />
+    <Content Include="awsauth\css\bootstrap.min.css" />
+    <Content Include="awsauth\css\default.css" />
+    <Content Include="awsauth\css\social-icons%402x.png" />
+    <Content Include="awsauth\css\social-icons.png" />
+    <Content Include="awsauth\js\autogrid.js" />
+    <Content Include="img\favicon.png" />
+    <Content Include="js\jquery-2.1.4.min.js" />
     <Content Include="packages.config" />
+    <None Include="awsauth\default.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -161,6 +180,7 @@
   <ItemGroup>
     <Compile Include="AdminTasks.cs" />
     <Compile Include="AppHost.cs" />
+    <Compile Include="awsauth\AwsAuthService.cs" />
     <Compile Include="AwsConfig.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -188,7 +208,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>64484</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:64484/</IISUrl>
+          <IISUrl>http://localhost:4400/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
