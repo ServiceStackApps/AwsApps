@@ -129,7 +129,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="awsauth\css\bootstrap-social.css" />
-    <Content Include="awsauth\css\bootstrap.min.css" />
+    <Content Include="css\bootstrap.min.css" />
     <Content Include="awsauth\css\default.css" />
     <Content Include="awsauth\css\social-icons%402x.png" />
     <Content Include="awsauth\css\social-icons.png" />
@@ -137,7 +137,8 @@
     <Content Include="img\favicon.png" />
     <Content Include="js\jquery-2.1.4.min.js" />
     <Content Include="packages.config" />
-    <None Include="awsauth\default.cshtml" />
+    <Content Include="awsauth\default.cshtml" />
+    <None Include="Properties\PublishProfiles\WebDeploy.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -166,13 +167,11 @@
     <Content Include="restfiles\img\row_bg.png" />
     <Content Include="restfiles\img\txt.png" />
     <Content Include="restfiles\js\ajaxfileupload.js" />
-    <Content Include="restfiles\js\jquery-1.8.3.min.js" />
     <Content Include="restfiles\files\test.txt" />
     <Content Include="todo\css\todos.css" />
     <Content Include="todo\default.htm" />
     <Content Include="todo\img\destroy.png" />
     <Content Include="todo\js\backbone-min.js" />
-    <Content Include="todo\js\jquery.min.js" />
     <Content Include="todo\js\todos.js" />
     <Content Include="todo\js\underscore-min.js" />
     <Content Include="Web.config" />
@@ -208,7 +207,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>64484</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:4400/</IISUrl>
+          <IISUrl>http://localhost:11001/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
