@@ -16,6 +16,9 @@ select,
 textarea {
     max-width: 280px;
 }
+.form-control {
+    width: auto;
+}
 .error {
     color: red;
 }
@@ -31,16 +34,14 @@ textarea {
     color: #2a6496;
 }
 
-.validation-summary-errors {
+.wrapper {
+    height: 40px;
+}
+.error-summary {
     color: red;
     padding: 10px;
 }
 
-.validation-summary-errors ul {
-    margin: 0;
-    padding: 0;
-    list-style-type: none;
-}
 .autogrid TH {
     text-align: left;
     text-shadow: #fff 1px 1px -1px;

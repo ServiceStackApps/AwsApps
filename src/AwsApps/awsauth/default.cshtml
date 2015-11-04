@@ -5,47 +5,11 @@
     <link href="/img/favicon.png" rel="icon">
     <link href="css/bootstrap.min.css" rel="stylesheet" />
     <link href="css/bootstrap-social.css" rel="stylesheet" />
-    <link href="css/default.css" rel="stylesheet"/>
+    <link href="css/default.css" rel="stylesheet" />
 
     <script src="/js/jquery-2.1.4.min.js"></script>
     <script src="js/autogrid.js"></script>
     <script src="/js/ss-utils.js"></script>
-
-    <script type="text/javascript">
-        var hashVars = $.ss.queryString(location.hash.replace('#', '?'));
-        if (hashVars['f']) {
-            $("#autherror").html($.ss.humanize(hashVars['f']));
-        }
-
-        $.getJSON("/api/auth", function (r) {
-            var html = "<h4 class='success'>Authenticated!</h4>"
-                + "<table>"
-                + $.map(r, function (k, v) {
-                    return "<tr><th>" + v + "<th>"
-                        + "<td>" + (typeof k == 'string' ? k : JSON.stringify(k)) + "</td></tr>";
-                }).join('')
-                + "</table>";
-            $("#status").html(html);
-        }).error(function () {
-            $("#status").html("<h4 class='error'>Not Authenticated</h4>");
-        });
-
-        $(document).bindHandlers({
-            switchUser: function (u) {
-                $("#userName").val(u);
-                $("#password").val('test');
-            }
-        });
-
-        $("#form-register").bindForm({
-            success: function (r) { location.href = '/'; }
-        });
-
-        @*var html = autogrid( @(Model.UserAuths.AsRawJson()));
-        $("#userauths").html(html);
-        html = autogrid( @(Model.UserAuthDetails.AsRawJson()));
-        $("#userauthdetails").html(html);*@
-    </script>
 </head>
 <body>
     <div class="navbar navbar-default navbar-fixed-top">
@@ -61,7 +25,7 @@
                 <ul class="nav navbar-nav">
                     <li>
                         <a href="/" style="" title="Home">
-                            <img src="/img/logo.png" alt="Home"/>
+                            <img src="/img/logo.png" alt="Home" />
                             <b>AWS Auth</b>
                         </a>
                     </li>
@@ -71,30 +35,21 @@
     </div>
     <div class="container body-content">
 
-        @*@using ServiceStack.Html
-            @model Mvc.Models.HomeViewModel
-            @{
-                ViewBag.Title = "Home Page";
-                var session = Model.Session;
-                var userName = session.UserName ?? session.Email ?? "test";
-            }*@
-
-        <div class="row" style="margin: 70px 0 0 0;">
+        <div class="row" style="margin: 20px 0 0 0;">
             <div class="col-lg-6">
 
                 @if (base.IsAuthenticated)
-            {
+                {
                     <h2 class="success">Authenticated!</h2>
                 }
                 else
                 {
                     <h2 class="error">Not Authenticated</h2>
                 }
-                <div id="autherror" class="error"></div>
 
-                <form action="/Home/Login">
-                    @base.Html.ValidationSummary()
-                    <input type="hidden" name="redirect" value="@base.Request.QueryString["redirect"]" />
+                <form id="form-login" action="/auth/credentials" method="POST">
+
+                    <div class="wrapper"><div class="error-summary"></div></div>
 
                     <div class="form-group">
                         <input class="form-control input-lg" id="userName" name="userName" type="text" placeholder="UserName" value="test">
@@ -103,7 +58,7 @@
                         <input class="form-control input-lg" id="password" name="password" type="text" placeholder="Password" value="test">
                         <button type="submit" class="btn btn-lg btn-default">Login</button>
                     </div>
-                    <div style="margin:10px">
+                    <div style="margin: 10px">
                         <b>Quick Login:</b>
                         <span data-click="switchUser:test">test</span>,
                         <span data-click="switchUser:test2">test2</span>,
@@ -111,14 +66,15 @@
                     </div>
                 </form>
 
-                <form action="/Home/Logout">
+                <form action="/auth/logout">
+                    <input type="hidden" name="continue" value="/awsauth/" />
                     <button type="submit" class="btn btn-default">Logout</button>
                 </form>
 
             </div>
             <div class="col-lg-6">
 
-                <h2 style="margin: 30px 0 0 0;">ServiceStack Status (Ajax)</h2>
+                <h2 style="margin: 30px 0 0 0;">ServiceStack Status</h2>
                 <div id="status"></div>
 
                 <table class="table table-striped" style="margin: 20px 0 0 0">
@@ -127,15 +83,15 @@
                     </tr>
                     <tr>
                         <th>View Session Info</th>
-                        <td><a href="/awsauth/session">/awsauth/session</a></td>
+                        <td><a href="/awsauth/userinfo">/awsauth/userinfo</a></td>
                     </tr>
                     <tr>
-                        <th>AuthOnly Page</th>
-                        <td><a href="/AuthOnly">/AuthOnly</a></td>
+                        <th>Requires Auth Service</th>
+                        <td><a href="/awsauth/RequiresAuth">/awsauth/RequiresAuth</a></td>
                     </tr>
                     <tr>
-                        <th>Requires Role Page</th>
-                        <td><a href="/RequiresRole">/RequiresRole</a></td>
+                        <th>Requires Role Service</th>
+                        <td><a href="/awsauth/RequiresRole">/awsauth/RequiresRole</a></td>
                     </tr>
                     <tr>
                         <th>Reset All User Info</th>
@@ -149,35 +105,29 @@
             <div class="col-lg-6">
                 <h3>Sign in with 3rd Party Providers</h3>
                 <div style="float: left; width: 250px; padding: 0 0 0 0;">
-                    <a class="btn btn-block btn-social btn-twitter" href="/api/auth/twitter">
+                    <a class="btn btn-block btn-social btn-twitter" href="/auth/twitter">
                         <b class="fa fa-twitter">T</b>Sign in with Twitter
                     </a>
-                    <a class="btn btn-block btn-social btn-facebook" href="/api/auth/facebook">
+                    <a class="btn btn-block btn-social btn-facebook" href="/auth/facebook">
                         <b class="fa fa-facebook">fb</b>Sign in with Facebook
                     </a>
-                    <a class="btn btn-block btn-social btn-github" href="/api/auth/github">
+                    <a class="btn btn-block btn-social btn-github" href="/auth/github">
                         <b class="fa fa-github"></b>Sign in with GitHub
                     </a>
-                    <a class="btn btn-block btn-social btn-google-plus" href="/api/auth/GoogleOAuth">
+                    <a class="btn btn-block btn-social btn-google-plus" href="/auth/GoogleOAuth">
                         <b class="fa fa-google-plus">G</b>Sign in with Google
                     </a>
-                    <a class="btn btn-block btn-social btn-yahoo" href="/api/auth/YahooOpenId">
+                    <a class="btn btn-block btn-social btn-yahoo" href="/auth/YahooOpenId">
                         <b class="fa fa-yahoo">Y!</b>Sign in with Yahoo
                     </a>
-                    <a class="btn btn-block btn-social btn-linkedin" href="/api/auth/LinkedIn">
+                    <a class="btn btn-block btn-social btn-linkedin" href="/auth/LinkedIn">
                         <b class="fa fa-linkedin">in</b>Sign in with LinkedIn
                     </a>
-
-                    @*<br />
-
-                        <a class="btn btn-block btn-social btn-windows" href="/api/auth/windowsauth">
-                            Sign in with Windows Auth
-                        </a>*@
                 </div>
             </div>
             <div class="col-lg-6">
                 <h3>Register New User</h3>
-                <form id="form-register" action="/api/register" method="POST">
+                <form id="form-register" action="/register" method="POST">
                     <div class="form-group">
                         <input class="form-control input-lg" type="text" name="FirstName" value="New" placeholder="First Name">
                         <span class="help-block"></span>
@@ -206,25 +156,65 @@
             </div>
         </div>
 
-        @*<div style="padding: 10px">
-                @if (!Model.UserAuths.IsEmpty())
-                {
-                    <h3>User Auths</h3>
-                    <div class="autogrid" id="userauths"></div>
-                }
-
-                @if (!Model.UserAuthDetails.IsEmpty())
-                {
-                    <h3>User Auth Details</h3>
-                    <div class="autogrid" id="userauthdetails"></div>
-                }
-            </div>*@
-
-        <a href="https://github.com/ServiceStack/Test/tree/master/src/Mvc">
+        <a href="https://github.com/ServiceStackApps/AwsApps/tree/master/src/AwsApps/awsauth">
             <img style="position:absolute;top:0;right:0;border:0;z-index:1031"
                  src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"
                  alt="Fork me on GitHub">
         </a>
     </div>
+
+    <div id="userinfo" style="padding:10px; display:none;">
+        <h3>User Auth</h3>
+        <div class="autogrid" id="userauth"></div>
+
+        <h3>User Auth Details</h3>
+        <div class="autogrid" id="userauthdetails"></div>
+    </div>
+
+    <script type="text/javascript">
+        $.getJSON("/auth", function (r) {
+            var html = "<h4 class='success'>Authenticated!</h4>"
+                + "<table>"
+                + $.map(r, function (k, v) {
+                    return "<tr><th>" + v + "<th>"
+                        + "<td>" + (typeof k == 'string' ? k : JSON.stringify(k)) + "</td></tr>";
+                }).join('')
+                + "</table>";
+            $("#status").html(html);
+
+            if (r['userName'])
+                $("#userName").val(r['userName']);
+
+            $.getJSON("/awsauth/userinfo", function(r) {
+                $("#userinfo").show();
+
+                if (r.userAuth)
+                    $("#userauth").html(autogrid([r.userAuth]));
+                if (r.userAuthDetails)
+                    $("#userauthdetails").html(autogrid(r.userAuthDetails));
+            });
+
+        }).error(function () {
+            $("#status").html("<h4 class='error'>Not Authenticated</h4>");
+        });
+
+        $(document).bindHandlers({
+            switchUser: function (u) {
+                $("#userName").val(u);
+                $("#password").val('test');
+            }
+        });
+
+        $("#form-login").bindForm({
+            success: function(r) {
+                 location.href = '@base.Request.QueryString["redirect"]' || '/awsauth/';
+            }
+        });
+
+        $("#form-register").bindForm({
+            success: function (r) { location.href = '/awsauth/'; }
+        });
+    </script>
+
 </body>
 </html>

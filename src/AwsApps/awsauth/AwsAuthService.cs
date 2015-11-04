@@ -1,48 +1,52 @@
 ﻿using ServiceStack;
 using System.Collections.Generic;
-using System.Runtime.Serialization;
 using ServiceStack.Auth;
-using ServiceStack.Aws.DynamoDb;
 
 namespace AwsAuth
 {
-    [Route("/awsauth/session")]
-    public class GetSession : IReturn<GetSessionResponse> {}
-
-    public class GetSessionResponse
+    [Route("/awsauth/userinfo")]
+    public class GetUserInfo : IReturn<GetUserInfoResponse> {}
+    public class GetUserInfoResponse
     {
-        public AuthUserSession Result { get; set; }
+        public AuthUserSession Session { get; set; }
+        public UserAuth UserAuth { get; set; }
+        public List<UserAuthDetails> UserAuthDetails { get; set; }
         public ResponseStatus ResponseStatus { get; set; }
     }
 
     [Route("/awsauth/reset")]
-    public class Reset { }
+    public class Reset {}
 
     public class AwsAuthService : Service
     {
-        public object Any(GetSession request)
+        public IAuthRepository AuthRepo { get; set; }
+
+        public object Any(GetUserInfo request)
         {
-            return new GetSessionResponse {
-                Result = SessionAs<AuthUserSession>(),
+            var session = SessionAs<AuthUserSession>();
+            if (!session.IsAuthenticated)
+                throw HttpError.Unauthorized("Requires Authentication");
+
+            return new GetUserInfoResponse {
+                Session = session,
+                UserAuth = (UserAuth)AuthRepo.GetUserAuth(session.UserAuthId),
+                UserAuthDetails = AuthRepo.GetUserAuthDetails(session.UserAuthId).Map(x => (UserAuthDetails)x),
             };
         }
 
         public object Any(Reset request)
         {
-            ResetUsers((DynamoDbAuthRepository)TryResolve<IAuthRepository>());
-            return "OK";
+            ((IClearable)AuthRepo).Clear();
+
+            CreateUser(AuthRepo, 1, "test", "test", new List<string> { "TheRole" }, new List<string> { "ThePermission" });
+            CreateUser(AuthRepo, 2, "test2", "test");
+
+            base.Request.RemoveSession();
+
+            return HttpResult.Redirect("/awsauth/#s=1");
         }
 
-        public static void ResetUsers(DynamoDbAuthRepository authRepo)
-        {
-            authRepo.DeleteUserAuth(1);
-            authRepo.DeleteUserAuth(2);
-
-            CreateUser(authRepo, 1, "test", "test", new List<string> { "TheRole" }, new List<string> { "ThePermission" });
-            CreateUser(authRepo, 2, "test2", "test");
-        }
-
-        private static void CreateUser(IUserAuthRepository authRepo,
+        private static void CreateUser(IAuthRepository authRepo,
             int id, string username, string password, List<string> roles = null, List<string> permissions = null)
         {
             string hash;
@@ -66,4 +70,27 @@ namespace AwsAuth
             authRepo.AssignRoles(userAuth, roles, permissions);
         }
     }
+
+    [Route("/awsauth/RequiresAuth")]
+    public class RequiresAuth { }
+
+    [Route("/awsauth/RequiresRole")]
+    public class RequiresRole { }
+
+    [AddHeader(ContentType = MimeTypes.Html)]
+    public class RequiresAuthService : Service
+    {
+        [Authenticate]
+        public object Any(RequiresAuth request)
+        {
+            return "<h1>HAS AUTH!</h1>";
+        }
+
+        [RequiredRole("TheRole")]
+        public object Any(RequiresRole request)
+        {
+            return "<h1>HAS ROLE!</h1>";
+        }
+    }
+
 }
