@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using Amazon;
 using Amazon.S3;
 using Funq;
@@ -9,6 +10,7 @@ using ServiceStack.Authentication.OpenId;
 using ServiceStack.Aws.DynamoDb;
 using ServiceStack.Aws.S3;
 using ServiceStack.Caching;
+using ServiceStack.Configuration;
 using ServiceStack.IO;
 using ServiceStack.Razor;
 using ServiceStack.Text;
@@ -18,11 +20,19 @@ namespace AwsApps
 {
     public class AppHost : AppHostBase
     {
-        public AppHost() : base("AWS Examples", typeof(AppHost).Assembly) { }
+        public AppHost() : base("AWS Examples", typeof (AppHost).Assembly)
+        {
+            var customSettings = new FileInfo(@"~/appsettings.txt".MapHostAbsolutePath());
+            AppSettings = customSettings.Exists
+                ? (IAppSettings)new TextFileSettings(customSettings.FullName)
+                : new AppSettings();
+        }
 
         public override void Configure(Container container)
         {
             JsConfig.EmitCamelCaseNames = true;
+
+            SetConfig(new HostConfig());
 
             Plugins.Add(new RazorFormat());
 
