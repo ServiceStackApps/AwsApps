@@ -9,23 +9,25 @@ using ServiceStack.Authentication.OAuth2;
 using ServiceStack.Authentication.OpenId;
 using ServiceStack.Aws.DynamoDb;
 using ServiceStack.Aws.S3;
+using ServiceStack.Aws.Sqs;
 using ServiceStack.Caching;
 using ServiceStack.Configuration;
 using ServiceStack.IO;
+using ServiceStack.Messaging;
 using ServiceStack.Razor;
 using ServiceStack.Text;
-using Todos;
 
 namespace AwsApps
 {
     public class AppHost : AppHostBase
     {
-        public AppHost() : base("AWS Examples", typeof (AppHost).Assembly)
+        public AppHost() : base("AWS Examples", typeof(AppHost).Assembly)
         {
-            var customSettings = new FileInfo(@"~/appsettings.txt".MapHostAbsolutePath());
-            AppSettings = customSettings.Exists
-                ? (IAppSettings)new TextFileSettings(customSettings.FullName)
-                : new AppSettings();
+#if !DEBUG  //App deployed with RELEASE version which uses Config settings in DynamoDb
+            AppSettings = new MultiAppSettings(
+                new DynamoDbAppSettings(new PocoDynamo(AwsConfig.CreateAmazonDynamoDb()), initSchema:true),
+                new AppSettings());
+#endif
         }
 
         public override void Configure(Container container)
@@ -42,14 +44,19 @@ namespace AwsApps
 
             container.Register<IPocoDynamo>(c => new PocoDynamo(AwsConfig.CreateAmazonDynamoDb()));
             var db = container.Resolve<IPocoDynamo>();
-            db.RegisterTable<Todo>();
+            db.RegisterTable<Todos.Todo>();
+            db.RegisterTable<EmailContacts.Email>();
+            db.RegisterTable<EmailContacts.Contact>();
             db.InitSchema();
 
             //AWS Auth
-            container.Register<ICacheClient>(new DynamoDbCacheClient(db));
-            container.Register<IAuthRepository>(new DynamoDbAuthRepository(db));
-            container.Resolve<IAuthRepository>().InitSchema();
+            container.Register<ICacheClient>(new DynamoDbCacheClient(db, initSchema:true));
+            container.Register<IAuthRepository>(new DynamoDbAuthRepository(db, initSchema:true));
             Plugins.Add(CreateAuthFeature());
+
+            //EmailContacts
+            ConfigureSqsMqServer(container);
+            ConfigureEmailer(container);
         }
 
         public override List<IVirtualPathProvider> GetVirtualFileSources()
@@ -79,6 +86,42 @@ namespace AwsApps
                 HtmlRedirect = "/awsauth/",
                 IncludeRegistrationService = true,
             };
+        }
+
+        private void ConfigureSqsMqServer(Container container)
+        {
+            container.Register<IMessageService>(c => new SqsMqServer(
+                AwsConfig.AwsAccessKey, AwsConfig.AwsSecretKey, RegionEndpoint.USEast1));
+
+            var mqServer = container.Resolve<IMessageService>();
+            mqServer.RegisterHandler<EmailContacts.EmailContact>(ServiceController.ExecuteMessage);
+            mqServer.Start();
+        }
+
+        private void ConfigureEmailer(Container container)
+        {
+            //If SmtpConfig exists, use real SMTP Emailer else use simulated DbEmailer
+            var smtpConfig = AppSettings.Get<EmailContacts.SmtpConfig>("SmtpConfig");
+            if (smtpConfig != null)
+            {
+                container.Register(smtpConfig);
+                container.RegisterAs<EmailContacts.SmtpEmailer, EmailContacts.IEmailer>().ReusedWithin(ReuseScope.Request);
+            }
+            else
+            {
+                container.RegisterAs<EmailContacts.DbEmailer, EmailContacts.IEmailer>().ReusedWithin(ReuseScope.Request);
+            }
+        }
+    }
+
+    [Route("/config")]
+    public class GetAppConfig {}
+
+    public class AppServices : Service
+    {
+        public object Any(GetAppConfig request)
+        {
+            return HostContext.AppSettings.GetAll();
         }
     }
 }

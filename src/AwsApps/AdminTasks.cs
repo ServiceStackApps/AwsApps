@@ -1,8 +1,11 @@
 ﻿using System.Linq;
 using NUnit.Framework;
 using ServiceStack;
+using ServiceStack.Aws.DynamoDb;
 using ServiceStack.Aws.S3;
+using ServiceStack.Configuration;
 using ServiceStack.Testing;
+using ServiceStack.Text;
 using ServiceStack.VirtualPath;
 
 namespace AwsApps
@@ -48,6 +51,20 @@ namespace AwsApps
             {
                 if (skipDirs.Any(x => file.VirtualPath.StartsWith(x))) continue;
                 s3.WriteFile(file, "restfiles/files".CombineWith(file.VirtualPath));
+            }
+        }
+
+        [Test]
+        public void Import_AppSettings_into_DynamoDb()
+        {
+            var fileSettings = new TextFileSettings("~/../../deploy/appsettings.txt".MapHostAbsolutePath());
+            var dynamoSettings = new DynamoDbAppSettings(AwsConfig.CreatePocoDynamo());
+            dynamoSettings.InitSchema();
+
+            //dynamoSettings.Set("SmtpConfig", "{Username:REPLACE_USER,Password:REPLACE_PASS,Host:email-smtp.us-east-1.amazonaws.com,Port:587}");
+            foreach (var config in fileSettings.GetAll())
+            {
+                dynamoSettings.Set(config.Key, config.Value);
             }
         }
     }
