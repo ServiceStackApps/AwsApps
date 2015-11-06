@@ -28,11 +28,13 @@ namespace EmailContacts
             return Dynamo.GetItem<Contact>(request.Id);
         }
 
-        public List<Contact> Any(FindContacts request)
+        public object Any(FindContacts request)
         {
-            return request.Age.HasValue
+            var contacts = request.Age.HasValue
                 ? Dynamo.FromQueryIndex<ContactAgeIndex>(q => q.Age == request.Age.Value).ExecInto<Contact>().ToList()
                 : Dynamo.ScanAll<Contact>().ToList();
+
+            return contacts.OrderBy(x => x.Id);
         }
 
         public Contact Post(CreateContact request)

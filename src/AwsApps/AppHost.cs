@@ -12,8 +12,10 @@ using ServiceStack.Aws.Sqs;
 using ServiceStack.Caching;
 using ServiceStack.Configuration;
 using ServiceStack.IO;
+using ServiceStack.Logging;
 using ServiceStack.Messaging;
 using ServiceStack.Razor;
+using ServiceStack.Support;
 using ServiceStack.Text;
 
 namespace AwsApps
@@ -22,7 +24,9 @@ namespace AwsApps
     {
         public AppHost() : base("AWS Examples", typeof(AppHost).Assembly)
         {
-#if !DEBUG  //Deployed RELEASE version uses Config settings in DynamoDb
+            LogManager.LogFactory = new StringBuilderLogFactory();
+
+#if !DEBUG  //Deployed RELEASE build uses Config settings in DynamoDb
             AppSettings = new MultiAppSettings(
                 new DynamoDbAppSettings(new PocoDynamo(AwsConfig.CreateAmazonDynamoDb()), initSchema:true),
                 new AppSettings());
@@ -32,8 +36,6 @@ namespace AwsApps
         public override void Configure(Container container)
         {
             JsConfig.EmitCamelCaseNames = true;
-
-            SetConfig(new HostConfig());
 
             Plugins.Add(new RazorFormat());
 
@@ -101,7 +103,7 @@ namespace AwsApps
 
         private void ConfigureEmailer(Container container)
         {
-            //If SmtpConfig exists, use real SMTP Emailer else use simulated DbEmailer
+            //If SmtpConfig exists, use real SMTP Emailer otherwise use simulated DbEmailer
             var smtpConfig = AppSettings.Get<EmailContacts.SmtpConfig>("SmtpConfig");
             if (smtpConfig != null)
             {
@@ -115,14 +117,19 @@ namespace AwsApps
         }
     }
 
-    [Route("/config")]
-    public class GetAppConfig {}
+#if DEBUG
+    //Useful service to dump Debug logs at /logs
+    [Route("/logs")]
+    public class GetLogs { }
 
-    public class AppServices : Service
+    public class LogService : Service
     {
-        public object Any(GetAppConfig request)
+        [AddHeader(ContentType=MimeTypes.PlainText)]
+        public object Any(GetLogs request)
         {
-            return HostContext.AppSettings.GetAll();
+            return ((StringBuilderLogFactory)LogManager.LogFactory).GetLogs();
         }
     }
+#endif
+
 }
