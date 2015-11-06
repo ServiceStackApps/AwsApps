@@ -5,8 +5,6 @@ using System.Threading;
 using System.Collections.Generic;
 using ServiceStack;
 using ServiceStack.FluentValidation;
-using ServiceStack.OrmLite;
-using ServiceStack.Aws;
 using ServiceStack.Aws.DynamoDb;
 
 namespace EmailContacts
@@ -96,7 +94,7 @@ namespace EmailContacts
                 ? Dynamo.FromScan<Email>(q => q.To == request.To)
                 : Dynamo.FromScan<Email>();
 
-            return query.Exec(limit: request.Take.GetValueOrDefault(10));
+            return query.Exec(limit: request.Take.GetValueOrDefault(100)).OrderByDescending(x => x.Id);
         }
     }
 

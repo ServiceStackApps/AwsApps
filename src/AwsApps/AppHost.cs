@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 using Amazon;
 using Amazon.S3;
 using Funq;
@@ -23,7 +22,7 @@ namespace AwsApps
     {
         public AppHost() : base("AWS Examples", typeof(AppHost).Assembly)
         {
-#if !DEBUG  //App deployed with RELEASE version which uses Config settings in DynamoDb
+#if !DEBUG  //Deployed RELEASE version uses Config settings in DynamoDb
             AppSettings = new MultiAppSettings(
                 new DynamoDbAppSettings(new PocoDynamo(AwsConfig.CreateAmazonDynamoDb()), initSchema:true),
                 new AppSettings());
@@ -91,10 +90,12 @@ namespace AwsApps
         private void ConfigureSqsMqServer(Container container)
         {
             container.Register<IMessageService>(c => new SqsMqServer(
-                AwsConfig.AwsAccessKey, AwsConfig.AwsSecretKey, RegionEndpoint.USEast1));
+                AwsConfig.AwsAccessKey, AwsConfig.AwsSecretKey, RegionEndpoint.USEast1) {
+                DisableBuffering = true,
+            });
 
             var mqServer = container.Resolve<IMessageService>();
-            mqServer.RegisterHandler<EmailContacts.EmailContact>(ServiceController.ExecuteMessage);
+            mqServer.RegisterHandler<EmailContacts.EmailContact>(ExecuteMessage);
             mqServer.Start();
         }
 
