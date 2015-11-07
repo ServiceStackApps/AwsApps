@@ -10,6 +10,8 @@
             font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
             font-weight: 300;
             line-height: 150%;
+            background: #FEC739;
+            background: #ffe9cf;
         }
         a {
             text-decoration: none;
@@ -20,13 +22,12 @@
         }
 
         #body {
-            width: 550px;
+            width: 980px;
             margin: auto;
-            padding: 50px 0 0 0;
         }
         #content {
             text-align: left;
-            padding: 20px 0 0 0;
+            padding: 60px 0 0 0;
         }
         .github-src {
             display: inline-block;
@@ -38,64 +39,150 @@
         }
         .app {
             color: #666;
-            border-bottom: 1px solid #f1f1f1;
             margin: 10px 0 20px 0;
+            background: #FFF;
+            border-radius: 2px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+        }
+        .app {
+        }
+
+        .app .screenshot img {
+            width: 470px;
+            float: left;
+            margin: 0 20px 0 0;
+        }
+        .info {
+            padding: 10px 0 0 0;
+        }
+        .clear {
+            clear: both;
+            display: block;
+        }
+        #header {
+            text-align: left;
+            border-bottom: 1px solid #ccc;
+            box-shadow: #e6e6e6 0 1px 3px;
+            background-color: #f7f7f7;
+            position: fixed;
+            width: 100%;
+            left: 0;
+            top: 0;
+            text-align: center;
+            color: #444;
         }
     </style>
 
     <div id="body">
 
-        <a href="https://github.com/ServiceStack/ServiceStack.Aws/" title="ServiceStack + AWS">
-            <img src="/img/logo-large.png"/>
-        </a>
-        
-        <h1>ServiceStack + AWS Examples</h1>
+        <div id="header">
+            <h1 style="font-size:18px; margin-left: -30px;">
+                <a href="https://github.com/ServiceStack/ServiceStack.Aws/" title="ServiceStack + AWS">
+                    <img src="/img/logo.png" style="vertical-align: middle" />
+                </a>
+                ServiceStack + AWS Live Examples
+            </h1>
+        </div>
 
         <div id="content">
             <div class="app">
-                <a href="https://github.com/ServiceStackApps/AwsApps/tree/master/src/AwsApps/todo" class="github-src"></a>
-                <a href="/todo/">Todos</a>
-                <p>
-                    TODO App rewritten to use a DynamoDB Backend with PocoDynamo
-                </p>
+                <div class="screenshot">
+                    <a href="http://awsrazor.servicestack.net">
+                        <img src="https://raw.githubusercontent.com/ServiceStack/Assets/master/img/aws/apps/screenshots/awsrazor.png" />
+                    </a>
+                </div>
+                <div class="info">
+                    <h2><a href="http://awsrazor.servicestack.net">Razor Rockstars</a></h2>
+                    <p>
+                        Razor Rockstars with all Razor Views and Markdown Content sourced from a S3 bucket
+                        and database rewritten to use PocoDynamo and DynamoDB
+                    </p>
+                    <a href="https://github.com/ServiceStackApps/RazorRockstars/tree/master/src/RazorRockstars.S3" class="github-src"></a>
+                    <span>Source code</span>
+                    <span class="clear"></span>
+                </div>
             </div>
             <div class="app">
-                <a href="https://github.com/ServiceStackApps/AwsApps/tree/master/src/AwsApps/imgur" class="github-src"></a>
-                <a href="/imgur/">Imgur</a>
-                <p>
-                    Imgur rewritten to use the <a href="https://github.com/ServiceStack/ServiceStack/wiki/Virtual-file-system">Virtual File System</a> 
-                    to support either Local FileSystem or S3 bucket backends
-                </p>
+                <div class="screenshot">
+                    <a href="/todo/">
+                        <img src="https://raw.githubusercontent.com/ServiceStack/Assets/master/img/aws/apps/screenshots/todos.png" />
+                    </a>
+                </div>
+                <div class="info">
+                    <h2><a href="/todo/">Todos</a></h2>
+                    <p>
+                        TODO App rewritten to use a DynamoDB Backend with PocoDynamo
+                    </p>
+                    <a href="https://github.com/ServiceStackApps/AwsApps/tree/master/src/AwsApps/todo" class="github-src"></a>
+                    <span>Source code</span>
+                    <span class="clear"></span>
+                </div>
             </div>
             <div class="app">
-                <a href="https://github.com/ServiceStackApps/AwsApps/tree/master/src/AwsApps/restfiles" class="github-src"></a>
-                <a href="/restfiles/">REST Files</a>
-                <p>
-                    REST Files rewritten to use the <a href="https://github.com/ServiceStack/ServiceStack/wiki/Virtual-file-system">Virtual File System</a>
-                    to support either Local FileSystem or S3 bucket backends
-                </p>
+                <div class="screenshot">
+                    <a href="/imgur/">
+                        <img src="https://raw.githubusercontent.com/ServiceStack/Assets/master/img/aws/apps/screenshots/imgur.png" />
+                    </a>
+                </div>
+                <div class="info">
+                    <h2><a href="/imgur/">Imgur</a></h2>
+                    <p>
+                        Imgur rewritten to use the <a href="https://github.com/ServiceStack/ServiceStack/wiki/Virtual-file-system">Virtual File System</a>
+                        to support either Local FileSystem or S3 bucket backends
+                    </p>
+                    <a href="https://github.com/ServiceStackApps/AwsApps/tree/master/src/AwsApps/imgur" class="github-src"></a>
+                    <span>Source code</span>
+                    <span class="clear"></span>
+                </div>
             </div>
             <div class="app">
-                <a href="https://github.com/ServiceStackApps/AwsApps/tree/master/src/AwsApps/awsauth" class="github-src"></a>
-                <a href="/awsauth/">AWS Auth</a>
-                <p>
-                    Multiple Auth Providers storing sessions in a DynamoDB Cache and users in a DynamoDB UserAuth repository
-                </p>
+                <div class="screenshot">
+                    <a href="/restfiles/">
+                        <img src="https://raw.githubusercontent.com/ServiceStack/Assets/master/img/aws/apps/screenshots/restfiles.png" />
+                    </a>
+                </div>
+                <div class="info">
+                    <h2><a href="/restfiles/">REST Files</a></h2>
+                    <p>
+                        REST Files rewritten to use the <a href="https://github.com/ServiceStack/ServiceStack/wiki/Virtual-file-system">Virtual File System</a>
+                        to support either Local FileSystem or S3 bucket backends
+                    </p>
+                    <a href="https://github.com/ServiceStackApps/AwsApps/tree/master/src/AwsApps/restfiles" class="github-src"></a>
+                    <span>Source code</span>
+                    <span class="clear"></span>
+                </div>
             </div>
             <div class="app">
-                <a href="https://github.com/ServiceStackApps/AwsApps/tree/master/src/AwsApps/awsauth" class="github-src"></a>
-                <a href="/emailcontacts/">Email Contacts</a>
-                <p>
-                    Uses DynamoDB backend and AWS SQS for MQ's and SES for emails
-                </p>
+                <div class="screenshot">
+                    <a href="/awsauth/">
+                        <img src="https://raw.githubusercontent.com/ServiceStack/Assets/master/img/aws/apps/screenshots/awsauth.png" />
+                    </a>
+                </div>
+                <div class="info">
+                    <h2><a href="/awsauth/">AWS Auth</a></h2>
+                    <p>
+                        Multiple Auth Providers storing sessions in a DynamoDB Cache and users in a DynamoDB UserAuth repository
+                    </p>
+                    <a href="https://github.com/ServiceStackApps/AwsApps/tree/master/src/AwsApps/awsauth" class="github-src"></a>
+                    <span>Source code</span>
+                    <span class="clear"></span>
+                </div>
             </div>
             <div class="app">
-                <a href="https://github.com/ServiceStackApps/RazorRockstars/tree/master/src/RazorRockstars.S3" class="github-src"></a>
-                <a href="http://awsrazor.servicestack.net">Razor Rockstars</a>
-                <p>
-                    Razor Rockstars with all Razor Views and Markdown Content sourced from a S3 bucket
-                    and database rewritten to use PocoDynamo and DynamoDB
-                </p>
+                <div class="screenshot">
+                    <a href="/emailcontacts/">
+                        <img src="https://raw.githubusercontent.com/ServiceStack/Assets/master/img/aws/apps/screenshots/emailcontacts.png" />
+                    </a>
+                </div>
+                <div class="info">
+                    <h2><a href="/emailcontacts/">Email Contacts</a></h2>
+                    <p>
+                        Uses DynamoDB backend and AWS SQS for MQ's and SES for emails
+                    </p>
+                    <a href="https://github.com/ServiceStackApps/AwsApps/tree/master/src/AwsApps/awsauth" class="github-src"></a>
+                    <span>Source code</span>
+                    <span class="clear"></span>
+                </div>
             </div>
         </div>
     </div>
