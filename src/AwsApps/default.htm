@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>AWS Examples</title>
+    <link href="/img/logo.png" rel="icon">
 </head>
 <body>
     <style>
@@ -10,7 +11,6 @@
             font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
             font-weight: 300;
             line-height: 150%;
-            background: #FEC739;
             background: #ffe9cf;
         }
         a {
@@ -29,13 +29,16 @@
             text-align: left;
             padding: 60px 0 0 0;
         }
-        .github-src {
+        .github-src, .aws-services {
             display: inline-block;
             vertical-align: middle;
             background: url(/img/github-icon.png) no-repeat;
             width: 32px;
             height: 32px;
             margin: 0 5px 0 0;
+        }
+        .aws-services {
+            background: url(/img/aws-logo.png) no-repeat;
         }
         .app {
             color: #666;
@@ -46,7 +49,6 @@
         }
         .app {
         }
-
         .app .screenshot img {
             width: 470px;
             float: left;
@@ -71,12 +73,50 @@
             text-align: center;
             color: #444;
         }
+        .links h4 {
+            margin: 5px 0;
+        }
+        .aws-links {
+            float: right;
+        }
+        .aws-icon {
+            display: block;
+            height: 32px;
+            width: 30px;
+            background-image: url(https://raw.githubusercontent.com/ServiceStack/Assets/master/img/aws/aws-sprite.png);
+            background-position: 0 -59px;
+            margin: 5px 10px 0 0;
+        }
+        .s3 {
+            background-position: -96px -59px;
+        }
+        .dynamodb {
+            background-position: -128px -59px;
+        }
+        .sqs {
+            background-position: -352px -59px;            
+        }
+        .ses {
+            background-position: -288px -59px;            
+        }
+        .links ul {
+            margin: 0 0 0 465px;
+        }
+        .links ul ul {
+            margin: 0;
+            padding: 0 0 0 20px;
+        }
+        .links li {
+            list-style: square;
+            color: #999;
+            font-size: 13px;
+        }
     </style>
 
     <div id="body">
 
         <div id="header">
-            <h1 style="font-size:18px; margin-left: -30px;">
+            <h1 style="font-size:18px; margin-left: -15px;">
                 <a href="https://github.com/ServiceStack/ServiceStack.Aws/" title="ServiceStack + AWS">
                     <img src="/img/logo.png" style="vertical-align: middle" />
                 </a>
@@ -92,30 +132,52 @@
                     </a>
                 </div>
                 <div class="info">
+                    <div class="aws-links">
+                        <a href="http://aws.amazon.com" class="aws-services" title="AWS Services"></a>
+                        <a href="https://aws.amazon.com/s3/" class="aws-icon s3" title="S3 - Simple Storage Service"></a>
+                        <a href="https://aws.amazon.com/dynamodb/" class="aws-icon dynamodb" title="DynamoDB - NoSQL Document DB"></a>
+                    </div>
                     <h2><a href="http://awsrazor.servicestack.net">Razor Rockstars</a></h2>
                     <p>
                         Razor Rockstars with all Razor Views and Markdown Content sourced from a S3 bucket
                         and database rewritten to use PocoDynamo and DynamoDB
                     </p>
-                    <a href="https://github.com/ServiceStackApps/RazorRockstars/tree/master/src/RazorRockstars.S3" class="github-src"></a>
-                    <span>Source code</span>
-                    <span class="clear"></span>
-                </div>
-            </div>
-            <div class="app">
-                <div class="screenshot">
-                    <a href="/todo/">
-                        <img src="https://raw.githubusercontent.com/ServiceStack/Assets/master/img/aws/apps/screenshots/todos.png" />
-                    </a>
-                </div>
-                <div class="info">
-                    <h2><a href="/todo/">Todos</a></h2>
-                    <p>
-                        TODO App rewritten to use a DynamoDB Backend with PocoDynamo
-                    </p>
-                    <a href="https://github.com/ServiceStackApps/AwsApps/tree/master/src/AwsApps/todo" class="github-src"></a>
-                    <span>Source code</span>
-                    <span class="clear"></span>
+                    <div class="links">
+                        <h4>
+                            <a href="https://github.com/ServiceStackApps/RazorRockstars/tree/master/src/RazorRockstars.S3">
+                                <span class="github-src"></span>
+                                Source Code
+                            </a>
+                        </h4>
+                        <ul>
+                            <li>
+                                <a href="https://github.com/ServiceStackApps/RazorRockstars/blob/master/src/RazorRockstars.S3/AppHost.cs">
+                                    AppHost.cs
+                                </a>
+                                - App Host configuration
+                            </li>
+                            <li>
+                                <a href="https://github.com/ServiceStackApps/RazorRockstars/blob/master/src/RazorRockstars.S3/RockstarsService.cs">
+                                    RockstarsService.cs
+                                </a>
+                                - DynamoDB Services Implementation
+                                <ul>
+                                    <li>
+                                        <a href="https://github.com/ServiceStackApps/RazorRockstars/blob/e159bb9d2e27eba7fc1a9ce1822b479602de8e0f/src/RazorRockstars.S3/RockstarsService.cs#L139">
+                                            Update Razor Views + Markdown at runtime
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="https://github.com/ServiceStackApps/RazorRockstars/blob/master/src/RazorRockstars.S3/ImportIntoS3Tasks.cs">
+                                    ImportIntoS3Tasks.cs
+                                </a>
+                                - Import existing RazorRockstar files into S3
+                            </li>
+                        </ul>
+                        <span class="clear"></span>
+                    </div>
                 </div>
             </div>
             <div class="app">
@@ -125,6 +187,10 @@
                     </a>
                 </div>
                 <div class="info">
+                    <div class="aws-links">
+                        <a href="http://aws.amazon.com" class="aws-services" title="AWS Services"></a>
+                        <a href="https://aws.amazon.com/s3/" class="aws-icon s3" title="S3 - Simple Storage Service"></a>
+                    </div>
                     <h2><a href="/imgur/">Imgur</a></h2>
                     <p>
                         Imgur rewritten to use the <a href="https://github.com/ServiceStack/ServiceStack/wiki/Virtual-file-system">Virtual File System</a>
@@ -137,11 +203,37 @@
             </div>
             <div class="app">
                 <div class="screenshot">
+                    <a href="/emailcontacts/">
+                        <img src="https://raw.githubusercontent.com/ServiceStack/Assets/master/img/aws/apps/screenshots/emailcontacts.png" />
+                    </a>
+                </div>
+                <div class="info">
+                    <div class="aws-links">
+                        <a href="http://aws.amazon.com" class="aws-services" title="AWS Services"></a>
+                        <a href="https://aws.amazon.com/dynamodb/" class="aws-icon dynamodb" title="DynamoDB - NoSQL Document DB"></a>
+                        <a href="https://aws.amazon.com/sqs/" class="aws-icon sqs" title="SQS - Simple Queue Service"></a>
+                        <a href="https://aws.amazon.com/ses/" class="aws-icon ses" title="SES - Simple Email Service"></a>
+                    </div>
+                    <h2><a href="/emailcontacts/">Email Contacts</a></h2>
+                    <p>
+                        Uses DynamoDB backend and AWS SQS for MQ's and SES for emails
+                    </p>
+                    <a href="https://github.com/ServiceStackApps/AwsApps/tree/master/src/AwsApps/awsauth" class="github-src"></a>
+                    <span>Source code</span>
+                    <span class="clear"></span>
+                </div>
+            </div>
+            <div class="app">
+                <div class="screenshot">
                     <a href="/restfiles/">
                         <img src="https://raw.githubusercontent.com/ServiceStack/Assets/master/img/aws/apps/screenshots/restfiles.png" />
                     </a>
                 </div>
                 <div class="info">
+                    <div class="aws-links">
+                        <a href="http://aws.amazon.com" class="aws-services" title="AWS Services"></a>
+                        <a href="https://aws.amazon.com/s3/" class="aws-icon s3" title="S3 - Simple Storage Service"></a>
+                    </div>
                     <h2><a href="/restfiles/">REST Files</a></h2>
                     <p>
                         REST Files rewritten to use the <a href="https://github.com/ServiceStack/ServiceStack/wiki/Virtual-file-system">Virtual File System</a>
@@ -159,6 +251,10 @@
                     </a>
                 </div>
                 <div class="info">
+                    <div class="aws-links">
+                        <a href="http://aws.amazon.com" class="aws-services" title="AWS Services"></a>
+                        <a href="https://aws.amazon.com/dynamodb/" class="aws-icon dynamodb" title="DynamoDB - NoSQL Document DB"></a>
+                    </div>
                     <h2><a href="/awsauth/">AWS Auth</a></h2>
                     <p>
                         Multiple Auth Providers storing sessions in a DynamoDB Cache and users in a DynamoDB UserAuth repository
@@ -170,16 +266,20 @@
             </div>
             <div class="app">
                 <div class="screenshot">
-                    <a href="/emailcontacts/">
-                        <img src="https://raw.githubusercontent.com/ServiceStack/Assets/master/img/aws/apps/screenshots/emailcontacts.png" />
+                    <a href="/todo/">
+                        <img src="https://raw.githubusercontent.com/ServiceStack/Assets/master/img/aws/apps/screenshots/todos.png" />
                     </a>
                 </div>
                 <div class="info">
-                    <h2><a href="/emailcontacts/">Email Contacts</a></h2>
+                    <div class="aws-links">
+                        <a href="http://aws.amazon.com" class="aws-services" title="AWS Services"></a>
+                        <a href="https://aws.amazon.com/dynamodb/" class="aws-icon dynamodb" title="DynamoDB - NoSQL Document DB"></a>
+                    </div>
+                    <h2><a href="/todo/">Todos</a></h2>
                     <p>
-                        Uses DynamoDB backend and AWS SQS for MQ's and SES for emails
+                        TODO App rewritten to use a DynamoDB Backend with PocoDynamo
                     </p>
-                    <a href="https://github.com/ServiceStackApps/AwsApps/tree/master/src/AwsApps/awsauth" class="github-src"></a>
+                    <a href="https://github.com/ServiceStackApps/AwsApps/tree/master/src/AwsApps/todo" class="github-src"></a>
                     <span>Source code</span>
                     <span class="clear"></span>
                 </div>
