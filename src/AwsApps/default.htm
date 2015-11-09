@@ -260,20 +260,20 @@
                     <p>
                         Version of Email Contacts
                         <a href="https://github.com/ServiceStackApps/EmailContacts" target="_blank" class="glyphicon glyphicon-new-window"></a>
-                        showing the same long-running Service being called from both HTTP and MQ Hosts
+                        where the same long-running Service is executed from both HTTP and MQ Hosts
                         by just changing which url the
                         <a href="https://github.com/ServiceStackApps/AwsApps/blob/72b4f6606c627d75c304e95db5ce4174a33dffcb/src/AwsApps/emailcontacts/default.cshtml#L95-L96">
-                            HTML Form is posted to
+                            HTML Form is posted to.
                         </a>
-                        where as the
+                        Since there's a
                         <a href="https://github.com/ServiceStackApps/AwsApps/blob/72b4f6606c627d75c304e95db5ce4174a33dffcb/src/AwsApps/AppHost.cs#L92-L102">
-                            SQS MQ Server is registered
+                            registered SQS MQ Server
                         </a>
                         the "One Way" pre-defined route automatically publishes Requests to the registered SQS MQ broker and executed on a background Thread.
                     </p>
                     <p>
                         AWS Email Contacts has been re-written to leverage AWS with Configuration,
-                        Contacts and Emails stored in DynamoDB, Amazon SQS used to process MQ requests, sending Emails with Amazon SES.
+                        Contacts and their Emails stored in DynamoDB, Amazon SQS used to process MQ requests and Emails sent with Amazon SES.
                     </p>
                     <div class="links">
                         <h4>
