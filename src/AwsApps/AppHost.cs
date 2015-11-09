@@ -17,6 +17,7 @@ using ServiceStack.Messaging;
 using ServiceStack.Razor;
 using ServiceStack.Support;
 using ServiceStack.Text;
+using ServiceStack.Validation;
 
 namespace AwsApps
 {
@@ -58,6 +59,8 @@ namespace AwsApps
             //EmailContacts
             ConfigureSqsMqServer(container);
             ConfigureEmailer(container);
+            Plugins.Add(new ValidationFeature());
+            container.RegisterValidators(typeof(EmailContacts.CreateContact).Assembly);
         }
 
         public override List<IVirtualPathProvider> GetVirtualFileSources()

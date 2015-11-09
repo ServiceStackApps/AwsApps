@@ -59,8 +59,8 @@ namespace EmailContacts
         public static void AddCustomers(IPocoDynamo db)
         {
             db.PutItem(new Contact { Name = "Kurt Cobain", Email = "demo+kurt@servicestack.net", Age = 27 });
-            db.PutItem(new Contact { Name = "Jimi Hendrix", Email = "demo+jimi@servicestack.net", Age = 27 });
-            db.PutItem(new Contact { Name = "Michael Jackson", Email = "demo+mike@servicestack.net", Age = 50 });
+            db.PutItem(new Contact { Name = "Mike Patton", Email = "demo+mike@servicestack.net", Age = 47 });
+            db.PutItem(new Contact { Name = "Dave Groul", Email = "demo+dave@servicestack.net", Age = 46 });
         }
     }
 
