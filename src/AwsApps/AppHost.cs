@@ -25,9 +25,10 @@ namespace AwsApps
     {
         public AppHost() : base("AWS Examples", typeof(AppHost).Assembly)
         {
-            LogManager.LogFactory = new StringBuilderLogFactory();
-
-#if !DEBUG  //Deployed RELEASE build uses Config settings in DynamoDb
+#if DEBUG
+            LogManager.LogFactory = new StringBuilderLogFactory(); //View logs at /logs
+#else
+            //Deployed RELEASE build uses Config settings in DynamoDb
             AppSettings = new MultiAppSettings(
                 new DynamoDbAppSettings(new PocoDynamo(AwsConfig.CreateAmazonDynamoDb()), initSchema:true),
                 new AppSettings());
@@ -37,7 +38,6 @@ namespace AwsApps
         public override void Configure(Container container)
         {
             JsConfig.EmitCamelCaseNames = true;
-
             Plugins.Add(new RazorFormat());
 
             //Comment out 2 lines below to change to use local FileSystem instead of S3
@@ -121,18 +121,16 @@ namespace AwsApps
     }
 
 #if DEBUG
-    //Useful service to dump Debug logs at /logs
     [Route("/logs")]
-    public class GetLogs { }
+    public class GetLogs { }    //Useful service to dump Debug logs at /logs
 
     public class LogService : Service
     {
-        [AddHeader(ContentType=MimeTypes.PlainText)]
+        [AddHeader(ContentType = MimeTypes.PlainText)]
         public object Any(GetLogs request)
         {
             return ((StringBuilderLogFactory)LogManager.LogFactory).GetLogs();
         }
     }
 #endif
-
 }
