@@ -22,7 +22,7 @@ namespace AwsApps
             s3 = AwsConfig.CreateS3VirtualPathProvider(appHost, AwsConfig.S3BucketName);
         }
 
-        [TestFixtureTearDown]
+        [OneTimeTearDown]
         public void TestFixtureTearDown()
         {
             appHost.Dispose();
