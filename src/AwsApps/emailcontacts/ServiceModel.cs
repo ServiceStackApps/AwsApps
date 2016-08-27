@@ -3,6 +3,8 @@ using ServiceStack;
 using ServiceStack.DataAnnotations;
 using ServiceStack.Aws.DynamoDb;
 
+namespace AwsApps.ServiceModel { public class Dummy {} } //convention in <system.web.webPages.razor />
+
 namespace EmailContacts
 {
     [Route("/emails")]
