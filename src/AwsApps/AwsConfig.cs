@@ -11,10 +11,7 @@ namespace AwsApps
 {
     public static class AwsConfig
     {
-        public static string S3BucketName
-        {
-            get { return ConfigUtils.GetAppSetting("S3BucketName", "ss-awsdemo"); }
-        }
+        public static string S3BucketName => ConfigUtils.GetAppSetting("S3BucketName", "ss-awsdemo");
 
         public static IAmazonDynamoDB CreateAmazonDynamoDb()
         {
