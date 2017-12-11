@@ -6,7 +6,8 @@ using ServiceStack.Aws.S3;
 using ServiceStack.Configuration;
 using ServiceStack.Testing;
 using ServiceStack.Text;
-using ServiceStack.VirtualPath;
+using ServiceStack.IO;
+using FileSystemVirtualFiles = ServiceStack.IO.FileSystemVirtualFiles;
 
 namespace AwsApps
 {
@@ -14,7 +15,7 @@ namespace AwsApps
     public class AdminTasks
     {
         private readonly ServiceStackHost appHost;
-        S3VirtualPathProvider s3;
+        S3VirtualFiles s3;
 
         public AdminTasks()
         {
@@ -44,7 +45,7 @@ namespace AwsApps
         [Test]
         public void Import_RestFiles_into_S3()
         {
-            var fs = new FileSystemVirtualPathProvider(appHost, "~/restfiles".MapHostAbsolutePath());
+            var fs = new FileSystemVirtualFiles("~/restfiles".MapHostAbsolutePath());
             var skipDirs = new[] { "restfiles/files" };
 
             foreach (var file in fs.GetAllFiles())

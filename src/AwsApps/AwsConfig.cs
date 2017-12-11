@@ -6,6 +6,7 @@ using ServiceStack;
 using ServiceStack.Aws.DynamoDb;
 using ServiceStack.Aws.S3;
 using ServiceStack.Configuration;
+using ServiceStack.IO;
 
 namespace AwsApps
 {
@@ -35,9 +36,9 @@ namespace AwsApps
             return new AmazonS3Client(AwsAccessKey, AwsSecretKey, RegionEndpoint.USEast1);
         }
 
-        public static S3VirtualPathProvider CreateS3VirtualPathProvider(IAppHost appHost, string bucketName)
+        public static S3VirtualFiles CreateS3VirtualPathProvider(IAppHost appHost, string bucketName)
         {
-            return new S3VirtualPathProvider(CreateAmazonS3Client(), bucketName, appHost);
+            return new S3VirtualFiles(CreateAmazonS3Client(), bucketName);
         }
 
         public static string AwsAccessKey

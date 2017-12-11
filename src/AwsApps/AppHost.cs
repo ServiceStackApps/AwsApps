@@ -42,7 +42,8 @@ namespace AwsApps
 
             //Comment out 2 lines below to change to use local FileSystem instead of S3
             var s3Client = new AmazonS3Client(AwsConfig.AwsAccessKey, AwsConfig.AwsSecretKey, RegionEndpoint.USEast1);
-            VirtualFiles = new S3VirtualPathProvider(s3Client, AwsConfig.S3BucketName, this);
+            VirtualFiles = new S3VirtualFiles(s3Client, AwsConfig.S3BucketName);
+            AddVirtualFileSources.Add(VirtualFiles);
 
             container.Register<IPocoDynamo>(c => new PocoDynamo(AwsConfig.CreateAmazonDynamoDb()));
             var db = container.Resolve<IPocoDynamo>();
@@ -61,13 +62,6 @@ namespace AwsApps
             ConfigureEmailer(container);
             Plugins.Add(new ValidationFeature());
             container.RegisterValidators(typeof(EmailContacts.CreateContact).Assembly);
-        }
-
-        public override List<IVirtualPathProvider> GetVirtualFileSources()
-        {
-            var fileSources = base.GetVirtualFileSources();
-            fileSources.Add(VirtualFiles);
-            return fileSources;
         }
 
         public AuthFeature CreateAuthFeature()
