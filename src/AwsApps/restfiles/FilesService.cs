@@ -72,8 +72,8 @@ namespace RestFiles
     public class FilesService : Service
     {
         private static readonly string RootDirectory = "restfiles/files";
-        static readonly HashSet<string> TextFileExtensions = "txt,sln,proj,cs,config,asax,css,htm,html,xml,js,md".Split(',').ToHashSet();
-        static readonly HashSet<string> ExcludeDirectories = "bin,Properties".Split(',').ToHashSet();
+        static readonly HashSet<string> TextFileExtensions = new HashSet<string>("txt,sln,proj,cs,config,asax,css,htm,html,xml,js,md".Split(','));
+        static readonly HashSet<string> ExcludeDirectories = new HashSet<string>("bin,Properties".Split(','));
 
         public object Get(Files request)
         {

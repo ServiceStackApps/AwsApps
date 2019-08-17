@@ -37,7 +37,11 @@ namespace AwsApps
 
         public override void Configure(Container container)
         {
-            JsConfig.EmitCamelCaseNames = true;
+            SetConfig(new HostConfig
+            {
+                UseCamelCase = true,
+            });
+
             Plugins.Add(new RazorFormat());
 
             //Comment out 2 lines below to change to use local FileSystem instead of S3
@@ -76,7 +80,7 @@ namespace AwsApps
                     new FacebookAuthProvider(AppSettings),      //Sign-in with Facebook
                     new YahooOpenIdOAuthProvider(AppSettings),  //Sign-in with Yahoo OpenId
                     new OpenIdOAuthProvider(AppSettings),       //Sign-in with Custom OpenId
-                    new GoogleOAuth2Provider(AppSettings),      //Sign-in with Google OAuth2 Provider
+                    new GoogleAuthProvider(AppSettings),        //Sign-in with Google OAuth2 Provider
                     new LinkedInOAuth2Provider(AppSettings),    //Sign-in with LinkedIn OAuth2 Provider
                     new GithubAuthProvider(AppSettings),        //Sign-in with GitHub OAuth Provider
                 })

@@ -45,8 +45,8 @@ namespace AwsApps
         {
             get
             {
-                var accessKey = ConfigUtils.GetNullableAppSetting("AWS_ACCESS_KEY")
-                    ?? Environment.GetEnvironmentVariable("AWS_ACCESS_KEY");
+                var accessKey = ConfigUtils.GetNullableAppSetting("AWS_ACCESS_KEY_ID")
+                    ?? Environment.GetEnvironmentVariable("AWS_ACCESS_KEY_ID");
 
                 if (string.IsNullOrEmpty(accessKey))
                     throw new ArgumentException("AWS_ACCESS_KEY must be defined in App.config or Environment Variable");
@@ -59,8 +59,8 @@ namespace AwsApps
         {
             get
             {
-                var secretKey = ConfigUtils.GetNullableAppSetting("AWS_SECRET_KEY")
-                    ?? Environment.GetEnvironmentVariable("AWS_SECRET_KEY");
+                var secretKey = ConfigUtils.GetNullableAppSetting("AWS_SECRET_ACCESS_KEY")
+                    ?? Environment.GetEnvironmentVariable("AWS_SECRET_ACCESS_KEY");
 
                 if (string.IsNullOrEmpty(secretKey))
                     throw new ArgumentException("AWS_SECRET_KEY must be defined in App.config or Environment Variable");
