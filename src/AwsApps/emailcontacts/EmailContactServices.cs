@@ -9,9 +9,9 @@ using ServiceStack.Aws.DynamoDb;
 
 namespace EmailContacts
 {
-    public class CotntactsValidator : AbstractValidator<CreateContact>
+    public class ContactsValidator : AbstractValidator<CreateContact>
     {
-        public CotntactsValidator()
+        public ContactsValidator()
         {
             RuleFor(x => x.Name).NotEmpty().WithMessage("A Name is what's needed.");
             RuleFor(x => x.Email).NotEmpty().EmailAddress();

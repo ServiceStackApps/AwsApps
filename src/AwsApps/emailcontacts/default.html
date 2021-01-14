@@ -1,6 +1,4 @@
-﻿@using EmailContacts
-@layout ""
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>Email Contacts</title>
@@ -54,7 +52,7 @@
             Add Contact
         </h3>
 
-        <form id="form-addcontact" action="@(new CreateContact().ToPostUrl())" method="POST">
+        <form id="form-addcontact" action="/contacts" method="POST">
             <div class="row">
                 <div class="col-sm-3 form-group">
                     <label for="Name">Name</label>
@@ -92,8 +90,8 @@
             <h4>To: <span data-html="email"></span></h4>
             <div class="clearfix"></div>
             <form id="form-emailcontact" method="POST"
-                action="@(new EmailContact().ToPostUrl())" 
-                data-action-alt="@(new EmailContact().ToOneWayUrl())">
+                action="/contacts/email" 
+                data-action-alt="/json/oneway/EmailContact">
                 <div class="alert alert-success" style="display:none"></div>
                 <input type="hidden" name="ContactId" data-val="id"  />
                 <div class="form-group">

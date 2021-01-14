@@ -1,22 +1,15 @@
-﻿using System.Collections.Generic;
-using Amazon;
+﻿using Amazon;
 using Amazon.S3;
 using Funq;
 using ServiceStack;
 using ServiceStack.Auth;
-using ServiceStack.Authentication.OAuth2;
-using ServiceStack.Authentication.OpenId;
 using ServiceStack.Aws.DynamoDb;
-using ServiceStack.Aws.S3;
 using ServiceStack.Aws.Sqs;
 using ServiceStack.Caching;
-using ServiceStack.Configuration;
 using ServiceStack.IO;
 using ServiceStack.Logging;
 using ServiceStack.Messaging;
 using ServiceStack.Razor;
-using ServiceStack.Support;
-using ServiceStack.Text;
 using ServiceStack.Validation;
 
 namespace AwsApps
@@ -78,10 +71,8 @@ namespace AwsApps
                     new DigestAuthProvider(AppSettings),        //Sign-in with HTTP Digest Auth
                     new TwitterAuthProvider(AppSettings),       //Sign-in with Twitter
                     new FacebookAuthProvider(AppSettings),      //Sign-in with Facebook
-                    new YahooOpenIdOAuthProvider(AppSettings),  //Sign-in with Yahoo OpenId
-                    new OpenIdOAuthProvider(AppSettings),       //Sign-in with Custom OpenId
                     new GoogleAuthProvider(AppSettings),        //Sign-in with Google OAuth2 Provider
-                    new LinkedInOAuth2Provider(AppSettings),    //Sign-in with LinkedIn OAuth2 Provider
+                    new LinkedInAuthProvider(AppSettings),      //Sign-in with LinkedIn OAuth2 Provider
                     new GithubAuthProvider(AppSettings),        //Sign-in with GitHub OAuth Provider
                 })
             {
